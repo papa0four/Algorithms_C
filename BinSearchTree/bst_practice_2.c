@@ -35,6 +35,53 @@ Node* new_node (int data)
 	return new;
 }
 
+Node* insert (Tree* tree, int data)
+{
+	Node* temp = (Node *)malloc(sizeof(Node));
+	if (temp == NULL)
+	{
+		perror("Could not allocate memory for temp in insert");
+		exit(EXIT_FAILURE);
+	}
+
+	temp = tree->root;
+
+	if (tree->root == NULL)
+	{
+		tree->root = new_node(data);
+		return tree->root;
+	}
+
+	while (true)
+	{
+		if (data > temp->data)
+		{
+			if (temp->right == NULL)
+			{
+				temp->right = new_node(data);
+				break;
+			}
+			else
+			{
+				temp = temp->right;
+			}
+		}
+		else
+		{
+			if (temp->left == NULL)
+			{
+				temp->left = new_node(data);
+				break;
+			}
+			else
+			{
+				temp = temp->left;
+			}
+		}
+	}
+	return tree->root;
+}
+
  bool search (Tree* tree, int data)
 {
 	Node* current = tree->root;
@@ -132,44 +179,6 @@ void in_order (Tree* tree)
 			}
 		}
 	}
-}
-
- Node* insert (Tree* tree, int data)
-{
-	Node* current = tree->root;
-	Node* parent = (Node *)malloc(sizeof(Node));
-
-	if (current == NULL)
-	{
-		current = new_node(data);
-		return current;
-	}
-
-	while (current != NULL)
-	{
-		parent = current;
-
-		if (data < current->data)
-		{
-			current = current->left;
-		}
-		else
-		{
-			current = current->right;
-		}
-
-		return current;
-	}
-
-	if (data < parent->data)
-	{
-		parent->left = new_node(data);
-	}
-	else
-	{
-		parent->right = new_node(data);
-	}
-	return parent;
 }
 
 // Node* min_value (Node* node)
