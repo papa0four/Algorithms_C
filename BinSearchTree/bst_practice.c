@@ -17,7 +17,7 @@ Node* new_node (int item)
 	return temp;
 }
 
-Node* search (Node* root,int key)
+Node* search (Node* root, int key)
 {
 	//Base Cases: root is null or key is present at root
 	if (root == NULL || root->key == key)
