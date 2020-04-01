@@ -151,63 +151,54 @@ void in_order(Tree* tree)
 	}
 }
 
-Node* max_value (Node* node)
+Node* min_value (Node* node)
 {
-	while (node->right != NULL)
+	Node* current = node;
+
+	while(current && current->left != NULL)
 	{
-		node = node->right;
+		current = current->left;
+	}
+
+	return current;
+}
+
+Node* delete (Node* node, int data)
+{
+	if (node == NULL)
+	{
+		return node;
+	}
+
+	if (data < node->data)
+	{
+		node->left = delete(node->left, data);
+	}
+	else if (data > node->data)
+	{
+		node->right = delete(node->right, data);
+	}
+	else
+	{
+		if (node->left == NULL)
+		{
+			Node* temp = node->right;
+			free(node);
+			return temp;
+		}
+		else if (node->right == NULL)
+		{
+			Node* temp = node->left;
+			free(node);
+			return temp;
+		}
+
+		Node* temp = min_value(node->right);
+		node->data = temp->data;
+		node->right = delete(node->right, temp->data);
 	}
 
 	return node;
-}
-
-void delete (Tree* tree, int data)
-{
-	Node* current = (Node *)malloc(sizeof(Node));
-	if (current == NULL)
-	{
-		perror("Could not allocate memory for current in delete");
-		exit(EXIT_FAILURE);
-	}
-
-	Node* parent = (Node *)malloc(sizeof(Node));
-	if (parent == NULL)
-	{
-		perror("Could not allocate memory for parent in delete");
-		exit(EXIT_FAILURE);
-	}
-
-	current = tree->root;
-	parent = search(tree, current->data);
-
-	if (current == NULL)
-	{
-		return;
-	}
-
-	if (current->left == NULL && current->right == NULL)
-	{
-		if (current != tree->root)
-		{
-			if (parent->left == current)
-			{
-				parent->left = NULL;
-			}
-			else
-			{
-				parent->right = NULL;
-			}
-		}
-		else
-		{
-			tree->root = NULL;
-			free(current);
-		}
-	}
-	else if (current->left && current->right)
-	{
-		Node* child = min_value
-	}
 }
 
 int main ()
@@ -216,18 +207,35 @@ int main ()
 	tree = (Tree *)malloc(sizeof(Tree));
 	if (tree == NULL)
 	{
-		perror("Could not allocate memory for tree in main function");
+		perror("Could not allocate memory for tree in main");
 		exit(EXIT_FAILURE);
 	}
 
-	printf("Printing current tree:\n");
-	insert(tree, 10);
-	// new_node(20);
+	Node* node = NULL;
+	node = (Node *)malloc(sizeof(Node));
+	if (node == NULL)
+	{
+		perror("Could not allocate memory for node in main");
+		exit(EXIT_FAILURE);
+	}
+
+	Node* new = NULL;
+	new = (Node *)malloc(sizeof(Node));
+	if (new == NULL)
+	{
+		perror("Could not allocate memory for new in main");
+		exit(EXIT_FAILURE);
+	}
+
+	tree->root = insert(tree, 10);
+	node = tree->root;
 	insert(tree, 20);
 	insert(tree, 30);
 	insert(tree, 50);
 	insert(tree, 70);
 	insert(tree, 80);
+
+	printf("Printing current tree:\n");
 	in_order(tree);
 
 	printf("\nSearching for existing value: 30\n");
@@ -240,20 +248,40 @@ int main ()
 		printf("Node provided does not exist!\n");
 	}
 
-	printf("Deleting 10\n");
-	delete(tree, 10);
-	// delete(tree, 20);
-	// delete(tree, 30);
-	// delete(tree, 50);
-	// delete(tree, 70);
-	// delete(tree, 80);
 
-	printf("Printing newly modified tree:\n");
+
+	printf("\nDeleting 20\n");
+	tree->root = delete(node, 20);
+	printf("Printing newly modified tree\n");
 	in_order(tree);
 
+	printf("\nDeleting 30\n");
+	tree->root = delete(node, 30);
+	printf("\nPrinting newly modified tree\n");
+	in_order(tree);
+
+	printf("\nDeleting 50\n");
+	tree->root = delete(node, 50);
+	printf("\nPrinting newly modified tree\n");
+	in_order(tree);
 	printf("\n");
 
+	printf("\nDeleting 10\n");
+	tree->root = delete(node, 10);
+	printf("Printing newly modified tree\n");
+	in_order(tree);
+	printf("\n");
+
+	new = new_node(40);
+	printf("\nInserting new node: 40\n");
+	insert(tree, new->data);
+
+	printf("Printing newly modified tree\n");
+	in_order(tree);
+	printf("\n");
+	
 	free(tree);
+	free(node);
 
 	return 0;
 
