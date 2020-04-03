@@ -45,36 +45,28 @@ List* list_init ()
 
 bool append (List* lHead, int data)
 {
-	Node* hNode = (Node *)malloc(sizeof(Node));
+	Node* hNode = new_node(data);
 	if (hNode == NULL)
 	{
-		perror("Could node allocate memory for head_node in create_list");
+		perror("Could not allocate memory for hNode in append");
 		exit(EXIT_FAILURE);
 	}
 
 	if (lHead->head_node == NULL)
 	{
-		lHead->head_node = new_node(data);
+		lHead->head_node = hNode;
 		return true;
 	}
 
-	Node* current = (Node *)malloc(sizeof(Node));
-	if (current == NULL)
+	Node* current = lHead->head_node;
+
+	while (current->next != NULL)
 	{
-		perror("Could not allocate memory for current in create_list");
-		exit(EXIT_FAILURE);
+		current = current->next;
 	}
 
-	current = lHead->head_node;
-
-	while (current != NULL)
-	{
-		Node* new = new_node(data);
-		current->next = new;
-		return true;
-	}
-
-	return false;
+	current->next = hNode;
+	return true;
 }
 
 void print_list (List* link_list)
@@ -110,37 +102,28 @@ void destroy_list (List* lHead)
 	}
 
 	lHead->head_node = NULL;
+	free(lHead);
 }
 
 int main ()
 {
 	List* link_list = list_init();
 
-	Node* list_node = (Node *)malloc(sizeof(Node));
-	if (list_node == NULL)
-	{
-		perror("Could not allocate memory for list_node in main");
-		exit(EXIT_FAILURE);
-	}
-
 	bool check;
 
 	for (int i = 10; i <= 50; i += 10)
 	{
 		check = append(link_list, i);
-		// list_node->data = i;
+
 		if (!check)
 		{
-			printf("LIST HAS CONTRACTED COVID19, ERADICATE IMMEDIATELY!\n");
+			printf("LIST NODE HAS CONTRACTED COVID19, ERADICATE IMMEDIATELY!\n");
 		}
 	}
 
 	print_list(link_list);
-
 	printf("Deleting tree:\n");
 	destroy_list(link_list);
-
-	print_list(link_list);
 
 	return 0;
 }
