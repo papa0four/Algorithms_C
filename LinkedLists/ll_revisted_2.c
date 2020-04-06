@@ -89,6 +89,66 @@ void print_list (List* link_list)
 	return;
 }
 
+bool search (List* lHead, int data)
+{
+	Node* current = lHead->head_node;
+
+	while (current->next != NULL)
+	{
+		if (data == current->data)
+		{
+			printf("Node %d found!\n", data);
+			return true;
+		}
+
+		current = current->next;
+	}
+
+	if (data == current->data)
+	{
+		printf("Node %d found!\n", data);
+		return true;
+	}
+
+	printf("Node %d does not exist in list\n", data);
+	return false;
+}
+
+Node* remove_node (List* lHead, int data)
+{
+	Node* temp = lHead->head_node;
+	Node* previous;
+
+	//if head node is the one to be deleted
+	if (temp->next != NULL && data == temp->data)
+	{
+		printf("Deleting node: %d\n", data);
+		lHead->head_node = temp->next;
+		// free(temp);
+		return temp;
+	}
+
+	//loop through list to search for selected node and keep track or previous node
+	while (temp != NULL && data != temp->data)
+	{
+		previous = temp;
+		temp = temp->next;
+	}
+
+	if (temp == NULL)
+	{
+		printf("Node %d does not exist in list\n", data);
+		// free(temp);
+		return NULL;
+	}
+
+	//remove node from the list
+	printf("Deleting node: %d\n", data);
+	previous->next = temp->next;
+	// free(temp);
+	return temp;
+}
+
 void destroy_list (List* lHead)
 {
 	Node* current = lHead->head_node;
@@ -108,6 +168,7 @@ void destroy_list (List* lHead)
 int main ()
 {
 	List* link_list = list_init();
+	Node* node;
 
 	bool check;
 
@@ -121,8 +182,24 @@ int main ()
 		}
 	}
 
+	search(link_list, 40);
+	search(link_list, 50);
+	search(link_list, 100);
+
 	print_list(link_list);
-	printf("Deleting tree:\n");
+
+	node = remove_node(link_list, 10);
+	free(node);
+	node = remove_node(link_list, 30);
+	free(node);
+	node = remove_node(link_list, 50);
+	free(node);
+	node = remove_node(link_list, 80);
+	free(node);
+
+	print_list(link_list);
+
+	printf("\nDeleting tree...\n");
 	destroy_list(link_list);
 
 	return 0;
