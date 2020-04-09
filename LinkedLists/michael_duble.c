@@ -75,7 +75,7 @@ bool append (List* lHead,  int data)
 void print_list (List* lHead)
 {
 	Node* current = lHead->head_node;
-	current->prev = NULL;
+	// current->prev = NULL;
 
 	printf("Printing forward traversal:\n");
 	while (current->next != NULL)
@@ -131,7 +131,8 @@ bool search (List* lHead, int data)
 Node* remove_node (List* lHead, int data)
 {
 	Node* temp = lHead->head_node;
-	Node* previous;
+	Node* previous = NULL;
+	temp->prev = previous;
 
 	//if head node is the one to be deleted
 	if (temp->next != NULL && data == temp->data)
@@ -144,9 +145,9 @@ Node* remove_node (List* lHead, int data)
 
 
 	//loop through list to search for selected node and keep track or previous node
-	while (temp != NULL && data != temp->data)
+	while (temp->next != NULL && data != temp->data)
 	{
-		temp->prev = previous;
+		// temp->prev = previous;
 		previous = temp;
 		temp = temp->next;		
 	}
@@ -167,11 +168,16 @@ Node* remove_node (List* lHead, int data)
 	//remove node from the list
 	printf("Deleting node: %d\n", data);
 	previous->next = temp->next;
+	previous->next->prev = temp->prev;
+	temp->next = NULL;
+	temp->prev = NULL;
 	return temp;
+
 }
 
 void destroy_list (List* lHead)
 {
+	printf("Destroying list...\n");
 	Node* current = lHead->head_node;
 	Node* next;
 
@@ -214,17 +220,19 @@ int main ()
 
 	node = remove_node(link_list, 80);
 	free(node);
+	print_list(link_list);
 	node = remove_node(link_list, 50);
 	free(node);
+	print_list(link_list);
 	search(link_list, 50);
 	node = remove_node(link_list, 100);
 	free(node);
+	print_list(link_list);
 	node = remove_node(link_list, 10);
 	free(node);
 	search(link_list, 10);
 	print_list(link_list);
 
-	printf("Destroying list...\n");
 	destroy_list(link_list);
 
 	return 0;
