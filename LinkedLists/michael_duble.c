@@ -93,7 +93,7 @@ void print_list (List* lHead)
 	{
 		printf("Node %d ", current->data);
 		current = current->prev;
-	}
+	}	
 
 	if (current->prev == NULL)
 	{
@@ -132,7 +132,6 @@ Node* remove_node (List* lHead, int data)
 {
 	Node* temp = lHead->head_node;
 	Node* previous = NULL;
-	temp->prev = previous;
 
 	//if head node is the one to be deleted
 	if (temp->next != NULL && data == temp->data)
@@ -147,7 +146,6 @@ Node* remove_node (List* lHead, int data)
 	//loop through list to search for selected node and keep track or previous node
 	while (temp->next != NULL && data != temp->data)
 	{
-		// temp->prev = previous;
 		previous = temp;
 		temp = temp->next;		
 	}
