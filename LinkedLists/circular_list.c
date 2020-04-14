@@ -39,6 +39,7 @@ List* list_init ()
 	}
 
 	lHead->head_node = NULL;
+	lHead->tail_node = NULL;
 	return lHead;
 }
 
@@ -50,8 +51,7 @@ bool push (List* lHead, int data)
 
 	if (!lHead->head_node && !lHead->tail_node)
 	{
-		lHead->head_node = new_head;
-		lHead->tail_node = new_head;
+		lHead->head_node = lHead->tail_node = new_head;
 		return true;
 	}
 	else
@@ -86,6 +86,7 @@ void print_list (List* lHead)
 	}
 	current->next = lHead->head_node;
 	printf("Tail: Node %d\n", current->data);
+	printf("\n");
 	return;
 }
 
@@ -136,18 +137,9 @@ Node* remove_head (List* lHead, int data)
 		printf("Deleting head node: %d\n", data);
 		lHead->head_node = temp->next;
 		prev->next = lHead->head_node;
+		printf("\n");
 		return temp;
 	}
-
-	// while (prev->next != lHead->head_node && data != prev->data)
-	// {
-	// 	prev = prev->next;
-	// }
-
-	// printf("Deleting head node: %d\n", data);
-	// prev->next = temp->next;
-	// lHead->head_node = prev->next;
-	// return temp;
 }
 
 Node* remove_tail (List* lHead, int data)
@@ -178,7 +170,6 @@ Node* remove_node (List* lHead, int data)
 	while (temp != NULL && data != temp->data)
 	{
 		current = temp;
-		// previous = temp;
 		temp = temp->next;
 	}
 
@@ -191,7 +182,6 @@ Node* remove_node (List* lHead, int data)
 	//remove node from the list
 	printf("Deleting node: %d\n", data);
 	current->next = temp->next;
-	// current->next->next = previous;
 	return temp;
 }
 
@@ -199,15 +189,21 @@ void destroy_list (List* lHead)
 {
 	Node* current = lHead->head_node;
 	Node* next;
-
-	while (current != lHead->head_node)
+	printf("Destroying list...\n");
+	while (current->next != lHead->head_node)
 	{
 		next = current->next;
 		free(current);
 		current = next;
 	}
 
+	if (current == lHead->tail_node)
+	{
+		free(current);
+	}
+
 	lHead->head_node = NULL;
+	lHead->tail_node = NULL;
 	free(lHead);
 }
 
@@ -264,32 +260,23 @@ int main ()
 
 	node = remove_node(link_list, 80);
 	free(node);
-	printf("\n");
 	print_list(link_list);
-	printf("\n");
 	node = remove_node(link_list, 50);
 	free(node);
-	printf("\n");
 	print_list(link_list);
-	printf("\n");
 	search(link_list, 50);
 	node = remove_tail(link_list, 100);
 	free(node);
-	printf("\n");
 	print_list(link_list);
-	printf("\n");
 	node = remove_head(link_list, 10);
 	free(node);
-	printf("\n");
 	search(link_list, 10);
-	printf("\n");
 	print_list(link_list);
 	check = is_circular(link_list);
 	if (!check)
 	{
 		printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
 	}
-	printf("\n");
 
 	destroy_list(link_list);
 
