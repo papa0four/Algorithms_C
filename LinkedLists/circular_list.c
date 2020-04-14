@@ -82,17 +82,14 @@ void print_list (List* lHead)
 
 	current = current->next;
 
-	while (current->next != lHead->head_node)
+	while (current->next != NULL && current->next != lHead->head_node)
 	{
 		printf("Node %d ", current->data);
 		current = current->next;
-		if (current->next == NULL)
-		{
-			printf("Tail: Node %d\n", current->data);
-			current->next = lHead->head_node;
-			return;
-		}
 	}
+	current->next = lHead->head_node;
+	printf("Tail: Node %d\n", current->data);
+	return;
 }
 
 bool search (List* lHead, int data)
@@ -123,36 +120,6 @@ Node* remove_head (List* lHead, int data)
 	Node* temp = lHead->head_node;
 	Node* prev = lHead->head_node;
 
-	if (temp == NULL)
-	{
-		printf("List is empty\n");
-		return NULL;
-	}
-
-	//if only 1 node exists in list
-	if (prev->next == prev && data == prev->data)
-	{
-		lHead->head_node = NULL;
-		return lHead->head_node;
-	}
-
-	while (prev->next != lHead->head_node && data != prev->data)
-	{
-		prev = prev->next;
-	}
-
-	printf("Deleting head node: %d\n", data);
-	prev->next = temp->next;
-	lHead->head_node = prev->next;
-	return temp;
-}
-
-Node* remove_tail (List* lHead, int data)
-{
-	Node* temp = lHead->head_node;
-	Node* current = lHead->head_node;
-	Node* prev;
-
 	if (lHead->head_node == NULL)
 	{
 		printf("List is empty\n");
@@ -160,11 +127,36 @@ Node* remove_tail (List* lHead, int data)
 	}
 
 	//if only 1 node exists in list
-	if (current->next == current && data == current->data)
+	if (temp->next == temp && data == temp->data)
 	{
 		lHead->head_node = NULL;
 		return lHead->head_node;
 	}
+
+	//if head node is the one to be deleted
+	if (temp->next != NULL && data == temp->data)
+	{
+		printf("Deleting head node: %d\n", data);
+		lHead->head_node = temp->next;
+		return temp;
+	}
+
+	// while (prev->next != lHead->head_node && data != prev->data)
+	// {
+	// 	prev = prev->next;
+	// }
+
+	// printf("Deleting head node: %d\n", data);
+	// prev->next = temp->next;
+	// lHead->head_node = prev->next;
+	// return temp;
+}
+
+Node* remove_tail (List* lHead, int data)
+{
+	Node* temp = lHead->head_node;
+	Node* current = lHead->head_node;
+	Node* prev;
 
 	while (current->next != lHead->head_node && data != current->data)
 	{
@@ -180,40 +172,29 @@ Node* remove_tail (List* lHead, int data)
 
 Node* remove_node (List* lHead, int data)
 {
-	Node* head = lHead->head_node;
-	if (head == NULL)
+	Node* temp = lHead->head_node;
+	Node* current = temp;
+	Node* previous;
+
+	//loop through list to search for selected node and keep track or previous node
+	while (temp != NULL && data != temp->data)
 	{
-		printf("List is empty\n");
+		current = temp;
+		// previous = temp;
+		temp = temp->next;
+	}
+
+	if (temp == NULL)
+	{
+		printf("Node %d does not exist in list\n", data);
 		return NULL;
 	}
 
-	Node* current = head;
-	Node* prev;
-
-	while (data != current->data)
-	{
-		if (current->next == head)
-		{
-			printf("Node %d does not exist in list\n", data);
-		}
-		break;
-	}
-
-	prev = current;
-	current = current->next;
-
-	if (current->next == head)
-	{
-		head = NULL;
-		return current;
-	}
-
-	if (current != head && current->next != head)
-	{
-		printf("Deleting node: %d\n", data);
-		prev->next = current->next;
-		return current;
-	}
+	//remove node from the list
+	printf("Deleting node: %d\n", data);
+	current->next = temp->next;
+	// current->next->next = previous;
+	return temp;
 }
 
 void destroy_list (List* lHead)
@@ -232,25 +213,25 @@ void destroy_list (List* lHead)
 	free(lHead);
 }
 
-bool is_circular (List* lHead)
-{
-	Node* current_head = lHead->head_node;
-	if (current_head == NULL)
-	{
-		printf("Technically empty lists are circular...\n");
-		return true;
-	}
+// bool is_circular (List* lHead)
+// {
+// 	Node* current_head = lHead->head_node;
+// 	if (current_head == NULL)
+// 	{
+// 		printf("Technically empty lists are circular...\n");
+// 		return true;
+// 	}
 
-	Node* next = current_head->next;
+// 	Node* next = current_head->next;
 
-	while (next != NULL && next != current_head)
-	{
-		next = next->next;
-	}
+// 	while (next->next != lHead->head_node)
+// 	{
+// 		next = next->next;
+// 	}
 
-	printf("Your list is circular...\n");
-	return (next == current_head);
-}
+// 	printf("Your list is circular...\n");
+// 	return (next->next == current_head);
+// }
 
 int main ()
 {
@@ -271,11 +252,11 @@ int main ()
 	}
 
 	print_list(link_list);
-	check = is_circular(link_list);
-	if (!check)
-	{
-		printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
-	}
+	// check = is_circular(link_list);
+	// if (!check)
+	// {
+	// 	printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
+	// }
 
 	search(link_list, 10);
 	search(link_list, 40);
@@ -298,17 +279,18 @@ int main ()
 	free(node);
 	printf("\n");
 	print_list(link_list);
+	printf("\n");
 	node = remove_head(link_list, 10);
 	free(node);
 	printf("\n");
 	search(link_list, 10);
 	printf("\n");
 	print_list(link_list);
-	check = is_circular(link_list);
-	if (!check)
-	{
-		printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
-	}
+	// check = is_circular(link_list);
+	// if (!check)
+	// {
+	// 	printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
+	// }
 	printf("\n");
 
 	destroy_list(link_list);
