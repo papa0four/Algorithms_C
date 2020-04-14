@@ -115,7 +115,7 @@ bool search (List* lHead, int data)
 Node* remove_head (List* lHead, int data)
 {
 	Node* temp = lHead->head_node;
-	// Node* prev = lHead->tail_node;
+	Node* prev = lHead->tail_node;
 
 	if (lHead->head_node == NULL)
 	{
@@ -135,7 +135,7 @@ Node* remove_head (List* lHead, int data)
 	{
 		printf("Deleting head node: %d\n", data);
 		lHead->head_node = temp->next;
-		lHead->tail_node->next = lHead->head_node;
+		prev->next = lHead->head_node;
 		return temp;
 	}
 
@@ -154,17 +154,17 @@ Node* remove_tail (List* lHead, int data)
 {
 	Node* temp = lHead->head_node;
 	Node* current = lHead->head_node;
-	Node* prev = lHead->tail_node;
+	Node* prev;
 
-	while (current->next != lHead->head_node && data != current->data)
+	while (current->next != lHead->head_node)
 	{
-		// prev = current;
+		prev = current;
 		current = current->next;
 	}
 
 	printf("Deleting tail node: %d\n", data);
-	prev->next = current->next;
-	lHead->head_node = prev->next;
+	prev->next = lHead->head_node;
+	lHead->tail_node = prev;
 	return current;
 }
 
