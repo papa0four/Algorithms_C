@@ -5,13 +5,13 @@
 typedef struct node
 {
 	int data;
-	struct node* prev;
 	struct node* next;
 } Node;
 
 typedef struct list
 {
 	Node* head_node;
+	Node* tail_node;
 } List;
 
 Node* new_node (int data)
@@ -44,26 +44,22 @@ List* list_init ()
 
 bool push (List* lHead, int data)
 {
-	Node* current_head = (Node *)malloc(sizeof(Node));
-	if (current_head == NULL)
-	{
-		perror("Could not allocate memory for current_head in push");
-		exit(EXIT_FAILURE);
-	}
-
 	Node* new_head = new_node(data);
+	Node* current_head = lHead->head_node;
+	Node* current_tail = lHead->tail_node;
 
-	if (lHead->head_node == NULL)
+	if (!lHead->head_node && !lHead->tail_node)
 	{
-		current_head = new_head;
-		lHead->head_node = current_head;
+		lHead->head_node = new_head;
+		lHead->tail_node = new_head;
 		return true;
 	}
 	else
 	{
-		current_head = lHead->head_node;
 		new_head->next = current_head;
 		lHead->head_node = new_head;
+		current_head = lHead->tail_node;
+		current_head->next = new_head;
 		return true;
 	}
 
@@ -73,6 +69,7 @@ bool push (List* lHead, int data)
 void print_list (List* lHead)
 {
 	Node* current = lHead->head_node;
+	Node* tail = lHead->tail_node;
 
 	printf("Printing list:\n");
 	if (current != NULL)
@@ -82,7 +79,7 @@ void print_list (List* lHead)
 
 	current = current->next;
 
-	while (current->next != NULL && current->next != lHead->head_node)
+	while (current->next != lHead->head_node && current != lHead->tail_node)
 	{
 		printf("Node %d ", current->data);
 		current = current->next;
@@ -118,7 +115,7 @@ bool search (List* lHead, int data)
 Node* remove_head (List* lHead, int data)
 {
 	Node* temp = lHead->head_node;
-	Node* prev = lHead->head_node;
+	// Node* prev = lHead->tail_node;
 
 	if (lHead->head_node == NULL)
 	{
@@ -138,6 +135,7 @@ Node* remove_head (List* lHead, int data)
 	{
 		printf("Deleting head node: %d\n", data);
 		lHead->head_node = temp->next;
+		lHead->tail_node->next = lHead->head_node;
 		return temp;
 	}
 
@@ -156,11 +154,11 @@ Node* remove_tail (List* lHead, int data)
 {
 	Node* temp = lHead->head_node;
 	Node* current = lHead->head_node;
-	Node* prev;
+	Node* prev = lHead->tail_node;
 
 	while (current->next != lHead->head_node && data != current->data)
 	{
-		prev = current;
+		// prev = current;
 		current = current->next;
 	}
 
@@ -202,7 +200,7 @@ void destroy_list (List* lHead)
 	Node* current = lHead->head_node;
 	Node* next;
 
-	while (current != NULL)
+	while (current != lHead->head_node)
 	{
 		next = current->next;
 		free(current);
@@ -213,25 +211,25 @@ void destroy_list (List* lHead)
 	free(lHead);
 }
 
-// bool is_circular (List* lHead)
-// {
-// 	Node* current_head = lHead->head_node;
-// 	if (current_head == NULL)
-// 	{
-// 		printf("Technically empty lists are circular...\n");
-// 		return true;
-// 	}
+bool is_circular (List* lHead)
+{
+	Node* current_head = lHead->head_node;
+	if (current_head == NULL)
+	{
+		printf("Technically empty lists are circular...\n");
+		return true;
+	}
 
-// 	Node* next = current_head->next;
+	Node* next = current_head->next;
 
-// 	while (next->next != lHead->head_node)
-// 	{
-// 		next = next->next;
-// 	}
+	while (next->next != lHead->head_node)
+	{
+		next = next->next;
+	}
 
-// 	printf("Your list is circular...\n");
-// 	return (next->next == current_head);
-// }
+	printf("Your list is circular...\n");
+	return (next->next == current_head);
+}
 
 int main ()
 {
@@ -252,11 +250,11 @@ int main ()
 	}
 
 	print_list(link_list);
-	// check = is_circular(link_list);
-	// if (!check)
-	// {
-	// 	printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
-	// }
+	check = is_circular(link_list);
+	if (!check)
+	{
+		printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
+	}
 
 	search(link_list, 10);
 	search(link_list, 40);
@@ -286,11 +284,11 @@ int main ()
 	search(link_list, 10);
 	printf("\n");
 	print_list(link_list);
-	// check = is_circular(link_list);
-	// if (!check)
-	// {
-	// 	printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
-	// }
+	check = is_circular(link_list);
+	if (!check)
+	{
+		printf("LIST HAS CONTRACTED COVID19, PLEASE PERFORM ERADICATION PROCEDURES!\n");
+	}
 	printf("\n");
 
 	destroy_list(link_list);
