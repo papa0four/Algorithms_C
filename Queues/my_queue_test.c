@@ -32,24 +32,37 @@ int main (void)
 
 	Item temp;
 
-	temp.data = 10;
-	printf("enqueue %d\n", temp.data);
-	enqueue(&queue, temp);
+	// temp.data = 10;
+	// printf("enqueue %d\n", temp.data);
+	// enqueue(&queue, temp);
 
-	temp.data = 20;
-	printf("enqueue %d\n", temp.data);
-	enqueue(&queue, temp);
+	// temp.data = 20;
+	// printf("enqueue %d\n", temp.data);
+	// enqueue(&queue, temp);
 
-	temp.data = 30;
-	printf("enqueue %d\n", temp.data);
-	enqueue(&queue, temp);
-
+	// temp.data = 30;
+	// printf("enqueue %d\n", temp.data);
+	// enqueue(&queue, temp);
+	for (int i = 10; i <= 100; i += 10)
+	{
+		temp.data = i;
+		enqueue(&queue, temp);
+	}
+	
 	printf("current size of the queue: %d\n", queue_length(&queue));
 	check_queue(queue);
 
 	printf("dequeue ...\n");
-	dequeue(&queue, &temp);
-	printf("dequeued: %d\n", temp.data);
+	for (int i = queue.length; i > 1; i--)
+	{
+		dequeue(&queue, &temp);
+		printf("dequeued: %d\n", temp.data);
+		check_queue(queue);
+		printf("%d\n", i);
+	}
+	// dequeue(&queue, &temp);
+	// printf("dequeued: %d\n", temp.data);
+	printf("Length of queue after dequeue: %d\n", queue.length);
 	check_queue(queue);
 	clear(&queue);
 
