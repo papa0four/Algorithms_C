@@ -6,8 +6,14 @@
 
 #define SPELL_NAME_SZ 15
 
-void stack_init (Stack* stack_ptr, int size)
+Stack* stack_init (int size)
 {
+	Stack* stack_ptr = (Stack *)malloc(sizeof(Stack));
+	if (stack_ptr == NULL)
+	{
+		perror("Could not allocate memory for sstack_ptr in stack_init");
+		exit(EXIT_FAILURE);
+	}
 	stack_node* new_spell = (stack_node *)malloc(sizeof(stack_node) * size);
 	if (new_spell == NULL)
 	{
@@ -26,6 +32,7 @@ void stack_destroy (Stack* stack_ptr)
 	stack_ptr->spell_list = NULL;
 	stack_ptr->capacity = 0;
 	stack_ptr->top = -1;
+	free(stack_ptr);
 }
 
 void push (Stack* stack_ptr, stack_node* spell)
@@ -98,15 +105,8 @@ char* get_spell ()
 
 int main (void)
 {
-	Stack* stack_ptr = (Stack *)malloc(sizeof(Stack));
-	if (stack_ptr == NULL)
-	{
-		perror("Could not allocate memory for stack_ptr in main");
-		exit(EXIT_FAILURE);
-	}
+	Stack* stack_ptr = stack_init(100);
 	char* traverse;
-
-	stack_init(stack_ptr, 100);
 
 	char* spell = get_spell();
 

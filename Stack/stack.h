@@ -11,7 +11,7 @@ typedef struct stack
 	int top;
 } Stack;
 
-void stack_init(Stack* stack_ptr, int size);
+Stack* stack_init(int size);
 void stack_destroy(Stack* stack_ptr);
 void push(Stack* stack_ptr, stack_node* spell);
 stack_node* pop (Stack* stack_ptr, stack_node* spell);
