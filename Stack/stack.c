@@ -8,7 +8,7 @@
 
 Stack* stack_init (int size)
 {
-	Stack* stack_ptr = (Stack *)malloc(sizeof(Stack));
+	Stack* stack_ptr = (Stack *)calloc(size, sizeof(Stack));
 	if (stack_ptr == NULL)
 	{
 		perror("Could not allocate memory for sstack_ptr in stack_init");
@@ -16,7 +16,7 @@ Stack* stack_init (int size)
 	}
 
 	printf("Size of stack at initialization: %ld\n", sizeof(Stack));
-	// memset(stack_ptr, NULL, SPELL_NAME_SZ);
+	memset(stack_ptr->spell_list, '\0', SPELL_NAME_SZ);
 	stack_ptr->spell_list[stack_ptr->top] = NULL;
 	stack_ptr->capacity = size;
 	stack_ptr->top = -1;
@@ -26,6 +26,7 @@ Stack* stack_init (int size)
 
 void stack_destroy (Stack* stack_ptr)
 {
+	stack_ptr = NULL;
 	free(stack_ptr);
 }
 
@@ -39,18 +40,19 @@ void push (Stack* stack_ptr, stack_node* spell)
 
 	else if (is_empty(stack_ptr))
 	{
-		stack_ptr->top = 0;
+
+		stack_ptr->spell_list[stack_ptr->top] = 0;
 		stack_ptr->spell_list[stack_ptr->top] = spell;
-		stack_ptr->top++;
+		stack_ptr->spell_list[stack_ptr->top++];
 	}
 	else
 	{
 		stack_ptr->spell_list[stack_ptr->top] = spell;
-		stack_ptr->top++;
+		stack_ptr->spell_list[stack_ptr->top++];
 	}
 }
 
-stack_node* pop (Stack* stack_ptr, stack_node* spell)
+Stack* pop (Stack* stack_ptr, stack_node* spell)
 {
 	if (is_empty(stack_ptr))
 	{
@@ -68,7 +70,7 @@ stack_node* pop (Stack* stack_ptr, stack_node* spell)
 		stack_ptr->spell_list[stack_ptr->top--];
 	}
 	
-	return spell;
+	return stack_ptr;
 }
 
 bool is_empty (Stack* stack_ptr)
@@ -82,7 +84,7 @@ bool is_empty (Stack* stack_ptr)
 
 bool is_full (Stack* stack_ptr)
 {
-	if (stack_ptr->top >= stack_ptr->capacity - 1)
+	if (stack_ptr->top > stack_ptr->capacity - 1)
 	{
 		return true;
 	}
@@ -107,7 +109,7 @@ char* get_spell ()
 
 int main (void)
 {
-	Stack* stack_ptr = stack_init(100);
+	Stack* stack_ptr = stack_init(3);
 
 	char* first_spell = get_spell();
 	push(stack_ptr, &first_spell);
@@ -121,27 +123,27 @@ int main (void)
 	printf("First spell:\n");
 	if (!is_empty(stack_ptr))
 	{
-		stack_node* spell_cast = pop(stack_ptr, &third_spell);
-		printf("%s", *spell_cast);
+		pop(stack_ptr, &third_spell);
+		printf("%s", *stack_ptr->spell_list[stack_ptr->top]);
 	}
 	printf("Second spell:\n");
 	if (!is_empty(stack_ptr))
 	{
-		stack_node* spell_cast = pop(stack_ptr, &second_spell);
-		printf("%s", *spell_cast);
+		pop(stack_ptr, &second_spell);
+		printf("%s", *stack_ptr->spell_list[stack_ptr->top]);
 	}
 	printf("Last spell:\n");
 	if (!is_empty(stack_ptr))
 	{
-		stack_node* spell_cast = pop(stack_ptr, &first_spell);
-		printf("%s", *spell_cast);
+		pop(stack_ptr, &first_spell);
+		printf("%s", *stack_ptr->spell_list[stack_ptr->top]);
 	}
 
 	printf("Destroying stack...\n");
 	stack_destroy(stack_ptr);
-	free(first_spell);
-	free(second_spell);
-	free(third_spell);
+	// free(first_spell);
+	// free(second_spell);
+	// free(third_spell);
 
 	return 0;
 
