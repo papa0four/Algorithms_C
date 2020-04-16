@@ -2,11 +2,13 @@
 #define _STACK_H
 #include <stdbool.h>
 
+#define SPELL_LIST_SZ 3
+
 typedef char* stack_node;
 
 typedef struct stack
 {
-	stack_node* spell_list;
+	stack_node* spell_list[SPELL_LIST_SZ];
 	int capacity;
 	int top;
 } Stack;
