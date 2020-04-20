@@ -2,7 +2,7 @@
 #define _STACK_H
 #include <stdbool.h>
 
-#define SPELL_LIST_SZ 3
+#define SPELL_LIST_SZ 5
 
 typedef char* stack_node;
 
