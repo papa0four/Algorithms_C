@@ -20,7 +20,7 @@ Stack* stack_init (int size)
 	stack_ptr->capacity = size;
 	stack_ptr->top = -1;
 
-	stack_ptr->items = calloc(STACK_SZ, sizeof(int*));
+	stack_ptr->items = calloc(STACK_SZ, sizeof(void*));
 	if (!stack_ptr->items)
 	{
 		free(stack_ptr);
@@ -69,6 +69,13 @@ void* peek(Stack* stack_ptr)
 	return stack_ptr->items[stack_ptr->top];
 }
 
+void* pop (Stack* stack_ptr)
+{
+	printf("Item to be popped from stack: %ld\n", (long) stack_ptr->items[stack_ptr->top]);
+
+	return stack_ptr->items[stack_ptr->top--];
+}
+
 void stack_destroy (Stack* stack_ptr)
 {
 	printf("Destroying stack...\n");
@@ -84,7 +91,7 @@ int main()
 
 	bool check;
 
-	for (size_t i = 50; i >= 10; i -= 10)
+	for (size_t i = 10; i <= 50; i += 10)
 	{
 		check = push(stack_ptr, (void *) i);
 		if (!check)
@@ -92,8 +99,20 @@ int main()
 			printf("Your stack has contracted COVID-19! ERADICATE IMMEDIATELY!!!\n");
 		}
 
-		printf("%d pushed to stack\n", (int) peek(stack_ptr));
+		printf("%ld pushed to stack\n", (long) peek(stack_ptr));
 	}
+
+	pop(stack_ptr);
+	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
+
+	pop(stack_ptr);
+	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
+
+	pop(stack_ptr);
+	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
+
+	pop(stack_ptr);
+	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
 
 	stack_destroy(stack_ptr);
 	free(stack_ptr);
