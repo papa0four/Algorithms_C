@@ -30,14 +30,14 @@ Stack* stack_init (int size)
 		return NULL;
 	}
 
+	// array = calloc(stack_ptr->capacity, sizeof(int));
+	// if (!array)
+	// {
+	// 	free(stack_ptr);
+	// 	free(array);
+	// 	return NULL;
+	// }
 	array = (int *)stack_ptr->items;
-	array = calloc(stack_ptr->capacity, sizeof(int));
-	if (!array)
-	{
-		free(stack_ptr);
-		free(array);
-		return NULL;
-	}
 
 	return stack_ptr;
 }
@@ -81,17 +81,13 @@ bool push (Stack* stack_ptr, int item)
 void stack_destroy (Stack* stack_ptr)
 {
 	printf("Destroying stack...\n");
-	while (!is_empty(stack_ptr))
-	{
-		array = NULL;
-		free(array);
-		stack_ptr->items = NULL;
-		free(stack_ptr->items);
-		stack_ptr->top--;
-	}
-
-	stack_ptr = NULL;
-	free(stack_ptr);
+	
+	free(array);
+			
+	stack_ptr->top = -1;
+	stack_ptr->capacity = 0;
+	array = NULL;
+	stack_ptr->items = NULL;
 }
 
 int main()
@@ -111,6 +107,6 @@ int main()
 
 	stack_destroy(stack_ptr);
 	free(stack_ptr);
-
+	
 	return 0;
 }
