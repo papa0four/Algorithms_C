@@ -3,8 +3,6 @@
 #include <stdbool.h>
 #include "stack_2.h"
 
-int* array;
-
 Stack* stack_init (int size)
 {
 	if (size < 0)
@@ -22,22 +20,12 @@ Stack* stack_init (int size)
 	stack_ptr->capacity = size;
 	stack_ptr->top = -1;
 
-	stack_ptr->items = calloc(stack_ptr->capacity, sizeof(int));
+	stack_ptr->items = calloc(STACK_SZ, sizeof(int*));
 	if (!stack_ptr->items)
 	{
 		free(stack_ptr);
-		free(array);
 		return NULL;
 	}
-
-	// array = calloc(stack_ptr->capacity, sizeof(int));
-	// if (!array)
-	// {
-	// 	free(stack_ptr);
-	// 	free(array);
-	// 	return NULL;
-	// }
-	array = (int *)stack_ptr->items;
 
 	return stack_ptr;
 }
@@ -63,30 +51,30 @@ bool is_full (Stack* stack_ptr)
 	return false;
 }
 
-bool push (Stack* stack_ptr, int item)
+bool push (Stack* stack_ptr, void* item)
 {
 	if (is_full(stack_ptr) || stack_ptr == NULL)
 	{
 		return false;
 	}
 
-	array = (int *)stack_ptr->items;
 	stack_ptr->top++;
-	array[stack_ptr->top] = item;
-	printf("Node %d pushed to stack\n", item);
+	stack_ptr->items[stack_ptr->top] = item;
 
 	return true;
+}
+
+void* peek(Stack* stack_ptr)
+{
+	return stack_ptr->items[stack_ptr->top];
 }
 
 void stack_destroy (Stack* stack_ptr)
 {
 	printf("Destroying stack...\n");
-	
-	free(array);
-			
+	free(stack_ptr->items);		
 	stack_ptr->top = -1;
 	stack_ptr->capacity = 0;
-	array = NULL;
 	stack_ptr->items = NULL;
 }
 
@@ -96,13 +84,15 @@ int main()
 
 	bool check;
 
-	for (int i = 50; i >= 10; i -= 10)
+	for (size_t i = 50; i >= 10; i -= 10)
 	{
-		check = push(stack_ptr, i);
+		check = push(stack_ptr, (void *) i);
 		if (!check)
 		{
 			printf("Your stack has contracted COVID-19! ERADICATE IMMEDIATELY!!!\n");
 		}
+
+		printf("%d pushed to stack\n", (int) peek(stack_ptr));
 	}
 
 	stack_destroy(stack_ptr);
