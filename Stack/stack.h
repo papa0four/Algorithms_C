@@ -16,7 +16,7 @@ typedef struct stack
 Stack* stack_init(int size);
 void stack_destroy(Stack* stack_ptr);
 void push(Stack* stack_ptr, stack_node* spell);
-void peek(Stack* stack_ptr);
+void* peek(Stack* stack_ptr);
 void pop (Stack* stack_ptr, stack_node* spell);
 bool is_empty(Stack* stack_ptr);
 bool is_full(Stack* stack_ptr);

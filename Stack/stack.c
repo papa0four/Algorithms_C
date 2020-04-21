@@ -59,15 +59,15 @@ void push (Stack* stack_ptr, stack_node* spell)
 	}
 }
 
-void peek(Stack* stack_ptr)
+void* peek(Stack* stack_ptr)
 {
 	if (is_empty(stack_ptr))
 	{
 		printf("Stack is empty\n");
-		return;
+		return NULL;
 	}
 
-	printf("%s\n", *stack_ptr->spell_list[stack_ptr->top]);
+	return stack_ptr->spell_list[stack_ptr->top];
 }
 
 void pop (Stack* stack_ptr, stack_node* spell)
@@ -146,7 +146,7 @@ int main (void)
 	printf("First spell:\n");
 	if (!is_empty(stack_ptr))
 	{
-		peek(stack_ptr);
+		printf("%s\n", (char*)peek(stack_ptr));
 		pop(stack_ptr, &fifth_spell);
 	}
 	printf("Second spell:\n");
