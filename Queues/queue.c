@@ -38,7 +38,7 @@ bool is_full (Queue* q_ptr)
 
 bool is_empty (Queue* q_ptr)
 {
-	return q_ptr->length == 0;
+	return q_ptr->tail == q_ptr->front;
 }
 
 bool enqueue (Queue* q_ptr, void* item)
@@ -48,9 +48,9 @@ bool enqueue (Queue* q_ptr, void* item)
 		return false;
 	}
 
-	q_ptr->tail = (q_ptr->tail + 1) % q_ptr->capacity;
-	q_ptr->items[q_ptr->tail] = item;
 	q_ptr->length += 1;
+	q_ptr->tail = (q_ptr->tail + 1) % q_ptr->capacity;
+	q_ptr->items[q_ptr->tail] = item;	
 
 	return true;
 }
@@ -66,8 +66,9 @@ void dequeue (Queue* q_ptr)
 		void* item = q_ptr->items[q_ptr->front];
 		printf("Item to be removed from front of queue: %ld\n", (long) q_ptr->items[q_ptr->front]);
 		q_ptr->front = (q_ptr->front + 1) % q_ptr->capacity;
-		q_ptr->length -= 1;
 	}
+
+	q_ptr->length -= 1;
 }
 
 void* peek (Queue* q_ptr)
