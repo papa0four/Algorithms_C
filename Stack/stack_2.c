@@ -69,11 +69,11 @@ void* peek(Stack* stack_ptr)
 	return stack_ptr->items[stack_ptr->top];
 }
 
-void* pop (Stack* stack_ptr)
+void pop (Stack* stack_ptr)
 {
-	printf("Item to be popped from stack: %ld\n", (long) stack_ptr->items[stack_ptr->top]);
+	printf("Item to be popped from top of stack: %ld\n", (long) stack_ptr->items[stack_ptr->top]);
 
-	return stack_ptr->items[stack_ptr->top--];
+	stack_ptr->items[stack_ptr->top--];
 }
 
 void stack_destroy (Stack* stack_ptr)
@@ -102,17 +102,11 @@ int main()
 		printf("%ld pushed to stack\n", (long) peek(stack_ptr));
 	}
 
-	pop(stack_ptr);
-	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
-
-	pop(stack_ptr);
-	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
-
-	pop(stack_ptr);
-	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
-
-	pop(stack_ptr);
-	printf("New top of stack: %ld\n", (long) peek(stack_ptr));
+	for (size_t i = stack_ptr->top; i > 0; i--)
+	{
+		pop(stack_ptr);
+		printf("New top of stack: %ld\n", (long) peek(stack_ptr));
+	}
 
 	stack_destroy(stack_ptr);
 	free(stack_ptr);
