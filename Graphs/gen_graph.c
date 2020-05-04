@@ -5,7 +5,6 @@ int main ()
 {
 	int n = 10;
 	int array[n][n];
-	int count = 0;
 
 	FILE* fp = fopen("graph.txt", "r");
 	if (!fp)
@@ -16,22 +15,22 @@ int main ()
 
 	for (int i = 0; i < n; i++)
 	{
-		for (count = 0; count < n; count++)
+		for (int j = 0; j < n; j++)
 		{
-			fscanf(fp, "%d", &array[i][count]);
+			fscanf(fp, "%d", &array[i][j]);
 		}
 	}
 
 	for (int i = 0; i < n; i++)
 	{
 		printf("[");
-		for (count = 0; count < n; count++)
+		for (int j = 0; j < n; j++)
 		{
-			if (array[i][count] == 1)
+			if (array[i][j] == 1)
 			{
 				printf("#");
 			}
-			else if (array[i][count] == 0)
+			else if (array[i][j] == 0)
 			{
 				printf(" ");
 			}
